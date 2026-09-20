@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sprite Sheet Slicer</title>
+  <meta name="description" content="A browser tool that slices sprite sheets into individual frames and exports them as a ZIP. Runs entirely client-side.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="top">
+    <h1>Sprite Sheet Slicer</h1>
+    <p>Cut a sprite sheet into individual frames and download them as a ZIP. Everything runs in your browser, so your images are never uploaded.</p>
+  </header>
+
+  <main>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <section id="start" class="start" aria-label="Load a sprite sheet">
+      <button type="button" id="dropzone" class="dropzone">
+        <span class="dz-title">Drop a sprite sheet here, or click to choose a file</span>
+        <span class="dz-sub">PNG, JPG, GIF or WebP</span>
+      </button>
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+      <p class="or">No sprite sheet handy?</p>
+      <button type="button" id="sampleBtn" class="btn">Try a sample sheet</button>
+    </section>
+
+    <div id="workspace" class="workspace" hidden>
+
+      <aside class="sidebar">
+        <section class="panel" aria-labelledby="sliceHeading">
+          <h2 id="sliceHeading">Slice settings</h2>
+
+          <fieldset class="modes">
+            <legend>Slice by</legend>
+            <label><input type="radio" name="mode" value="grid" checked> Rows and columns</label>
+            <label><input type="radio" name="mode" value="size"> Frame size</label>
+          </fieldset>
+
+          <div id="gridFields" class="fields">
+            <label>Columns <input type="number" id="cols" min="1" step="1" value="4" inputmode="numeric"></label>
+            <label>Rows <input type="number" id="rows" min="1" step="1" value="4" inputmode="numeric"></label>
+          </div>
+
+          <div id="sizeFields" class="fields" hidden>
+            <label>Frame width (px) <input type="number" id="frameW" min="1" step="1" value="32" inputmode="numeric"></label>
+            <label>Frame height (px) <input type="number" id="frameH" min="1" step="1" value="32" inputmode="numeric"></label>
+          </div>
+
+          <div class="fields">
+            <label>Margin (px) <input type="number" id="margin" min="0" step="1" value="0" inputmode="numeric"></label>
+            <label>Spacing (px) <input type="number" id="spacing" min="0" step="1" value="0" inputmode="numeric"></label>
+          </div>
+          <p class="hint">Margin is the border around the whole sheet. Spacing is the gap between frames.</p>
+
+          <p id="summary" class="summary"></p>
+
+          <label class="check"><input type="checkbox" id="manifest"> Include a frames.json file with each frame's position</label>
+
+          <div class="btn-row">
+            <button type="button" id="exportBtn" class="btn primary">Export all as ZIP</button>
+            <button type="button" id="newBtn" class="btn">Load another image</button>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="inspectHeading">
+          <h2 id="inspectHeading">Selected frame</h2>
+          <div class="inspect-box"><canvas id="inspect" width="1" height="1" aria-label="Enlarged preview of the selected frame"></canvas></div>
+          <p id="inspectInfo" class="inspect-info">Click a frame to inspect it.</p>
+          <button type="button" id="downloadFrameBtn" class="btn" disabled>Download this frame</button>
+        </section>
+      </aside>
+
+      <div class="stage">
+        <section class="panel" aria-labelledby="sheetHeading">
+          <h2 id="sheetHeading">Sheet preview</h2>
+          <div class="checker sheet-wrap"><canvas id="sheet" width="1" height="1" aria-label="Sprite sheet with the slicing grid drawn on top. Click a frame to select it."></canvas></div>
+        </section>
+
+        <section class="panel" aria-labelledby="framesHeading">
+          <h2 id="framesHeading">Frames</h2>
+          <div id="frames" class="frames"></div>
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="foot">
+    <p>Built with vanilla JavaScript, the Canvas API and <a href="https://stuk.github.io/jszip/" rel="noopener">JSZip</a>.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
